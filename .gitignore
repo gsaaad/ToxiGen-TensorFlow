@@ -1,0 +1,47 @@
+# Dependencies
+node_modules/
+vendor/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Build outputs
+dist/
+build/
+*.log
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# DynamoDB Local
+dynamodb_local/
+shared-local-instance.db
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+Source-Files
+
+# AWS credentials (NEVER commit these)
+aws-credentials.json
+credentials.json
+
+# Sample data exports
+sample_data.json
+
+# PHP
+composer.lock
+
+# OS files
+Thumbs.db
+Desktop.ini

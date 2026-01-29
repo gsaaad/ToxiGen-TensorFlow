@@ -1,0 +1,14 @@
+# Python Scripts Requirements
+# Install with: pip install -r requirements.txt
+
+# Dataset loading
+datasets>=2.16.0
+huggingface_hub>=0.20.0
+
+# AWS SDK
+boto3>=1.34.0
+botocore>=1.34.0
+
+# Utilities
+tqdm>=4.66.0
+python-dotenv>=1.0.0

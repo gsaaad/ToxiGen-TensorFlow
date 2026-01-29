@@ -1,0 +1,31 @@
+{
+  "name": "text-toxicity-analyzer",
+  "version": "1.0.0",
+  "description": "Full-stack text toxicity analyzer using TensorFlow.js and ToxiGen dataset",
+  "scripts": {
+    "frontend:install": "cd frontend && npm install",
+    "frontend:dev": "cd frontend && npm run dev",
+    "frontend:build": "cd frontend && npm run build",
+    "backend:start": "cd backend && php -S localhost:8000 router.php",
+    "dev": "concurrently \"npm run frontend:dev\" \"npm run backend:start\"",
+    "setup": "npm run frontend:install && pip install -r scripts/requirements.txt"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/text-toxicity-analyzer.git"
+  },
+  "keywords": [
+    "toxicity",
+    "tensorflow",
+    "machine-learning",
+    "nlp",
+    "react",
+    "php",
+    "dynamodb"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
