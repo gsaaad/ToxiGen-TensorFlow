@@ -96,20 +96,34 @@ function Dataset() {
   return (
     <div className="max-w-6xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">
-          ToxiGen Dataset
-        </h1>
+        <div className="flex items-center gap-3 mb-2">
+          <span className="text-3xl">📊</span>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            ToxiGen Dataset
+          </h1>
+        </div>
         <p className="text-gray-600">
-          Browse the ToxiGen dataset containing annotated examples of toxic and
-          non-toxic text.
+          Browse the ToxiGen dataset containing 274,186 annotated examples of toxic and
+          non-toxic text across multiple target groups.
         </p>
+        <div className="flex gap-3 mt-4">
+          <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
+            274K+ Samples
+          </span>
+          <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">
+            13 Target Groups
+          </span>
+          <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
+            Human Annotated
+          </span>
+        </div>
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-xl shadow-md border border-gray-100 p-6 mb-6">
+      <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 mb-6">
         <div className="flex flex-wrap gap-4 items-end">
           <div className="flex-1 min-w-[200px]">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
               Search Text
             </label>
             <form onSubmit={handleSearch} className="flex gap-2">
@@ -118,11 +132,11 @@ function Dataset() {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Search in dataset..."
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="flex-1 px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
               />
               <button
                 type="submit"
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:opacity-90 transition-opacity font-medium"
               >
                 Search
               </button>
@@ -130,7 +144,7 @@ function Dataset() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
               Filter by Label
             </label>
             <select
@@ -139,7 +153,7 @@ function Dataset() {
                 setFilter(e.target.value);
                 setCurrentPage(1);
               }}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
             >
               <option value="all">All</option>
               <option value="toxic">Toxic Only</option>
@@ -151,25 +165,32 @@ function Dataset() {
 
       {/* Error Message */}
       {error && (
-        <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-3 rounded-lg mb-6">
-          <p className="font-medium">⚠️ {error}</p>
-          <p className="text-sm mt-1">Showing sample data for demonstration.</p>
+        <div className="bg-amber-50 border border-amber-200 text-amber-800 px-5 py-4 rounded-xl mb-6 flex items-start gap-3">
+          <span className="text-xl">⚠️</span>
+          <div>
+            <p className="font-medium">{error}</p>
+            <p className="text-sm mt-1 text-amber-600">Showing sample data for demonstration.</p>
+          </div>
         </div>
       )}
 
       {/* Data Table */}
-      <div className="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden">
+      <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
         {loading ? (
           <div className="p-12 text-center">
-            <div className="loading-pulse text-gray-500">
-              Loading dataset...
+            <div className="inline-flex items-center gap-3 text-gray-500">
+              <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+              </svg>
+              <span>Loading dataset...</span>
             </div>
           </div>
         ) : (
           <>
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-gray-50 border-b border-gray-200">
+                <thead className="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
                   <tr>
                     <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                       ID
@@ -185,11 +206,11 @@ function Dataset() {
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200">
+                <tbody className="divide-y divide-gray-100">
                   {data.map((item, index) => (
-                    <tr key={item.id || index} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {item.id || index + 1}
+                    <tr key={item.id || index} className="hover:bg-blue-50/50 transition-colors">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400 font-mono">
+                        #{item.id || index + 1}
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-800 max-w-xl">
                         <p className="line-clamp-2">{item.text}</p>
@@ -197,8 +218,10 @@ function Dataset() {
                       <td className="px-6 py-4 whitespace-nowrap">
                         {getToxicityBadge(item.toxicity_label)}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {item.target_group || "N/A"}
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className="px-2 py-1 bg-gray-100 text-gray-600 rounded-md text-sm">
+                          {item.target_group || "N/A"}
+                        </span>
                       </td>
                     </tr>
                   ))}
@@ -207,26 +230,26 @@ function Dataset() {
             </div>
 
             {/* Pagination */}
-            <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
+            <div className="px-6 py-4 bg-gradient-to-r from-gray-50 to-gray-100 border-t border-gray-200 flex items-center justify-between">
               <div className="text-sm text-gray-600">
-                Page {currentPage} of {totalPages}
+                Page <span className="font-semibold">{currentPage}</span> of <span className="font-semibold">{totalPages}</span>
               </div>
               <div className="flex gap-2">
                 <button
                   onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                   disabled={currentPage === 1}
-                  className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 py-2 border border-gray-200 rounded-xl hover:bg-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
-                  Previous
+                  ← Previous
                 </button>
                 <button
                   onClick={() =>
                     setCurrentPage((p) => Math.min(totalPages, p + 1))
                   }
                   disabled={currentPage === totalPages}
-                  className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 py-2 border border-gray-200 rounded-xl hover:bg-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
-                  Next
+                  Next →
                 </button>
               </div>
             </div>
