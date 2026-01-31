@@ -1,7 +1,13 @@
-import { useState, useEffect } from 'react';
-import { StatCard, CategoryBar, PieChart } from '../components/DatasetStats';
-import { Card, CardHeader, CardBody, LoadingSpinner, Alert } from '../components/UI';
-import axios from 'axios';
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { CategoryBar, PieChart, StatCard } from "../components/DatasetStats";
+import {
+  Alert,
+  Card,
+  CardBody,
+  CardHeader,
+  LoadingSpinner,
+} from "../components/UI";
 
 function Insights() {
   const [stats, setStats] = useState(null);
@@ -15,14 +21,14 @@ function Insights() {
   const fetchStats = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('/api/stats.php');
+      const response = await axios.get("/api/stats.php");
       setStats(response.data);
       setError(null);
     } catch (err) {
-      console.error('Error fetching stats:', err);
+      console.error("Error fetching stats:", err);
       // Use demo data on error
       setStats(getDemoStats());
-      setError('Using demo data - Connect backend for live statistics');
+      setError("Using demo data - Connect backend for live statistics");
     } finally {
       setLoading(false);
     }
@@ -40,14 +46,14 @@ function Insights() {
       identity_attack: { count: 45678, percentage: 16.7 },
       obscene: { count: 34567, percentage: 12.6 },
       threat: { count: 23456, percentage: 8.6 },
-      sexual_explicit: { count: 4892, percentage: 1.8 }
+      sexual_explicit: { count: 4892, percentage: 1.8 },
     },
     target_groups: {
       general: { count: 96500, percentage: 35.2 },
       identity: { count: 77870, percentage: 28.4 },
       political: { count: 51273, percentage: 18.7 },
-      other: { count: 48543, percentage: 17.7 }
-    }
+      other: { count: 48543, percentage: 17.7 },
+    },
   });
 
   if (loading) {
@@ -59,19 +65,19 @@ function Insights() {
   }
 
   const categoryColors = {
-    toxicity: 'bg-red-500',
-    insult: 'bg-orange-500',
-    identity_attack: 'bg-purple-500',
-    obscene: 'bg-yellow-500',
-    threat: 'bg-rose-500',
-    sexual_explicit: 'bg-pink-500'
+    toxicity: "bg-red-500",
+    insult: "bg-orange-500",
+    identity_attack: "bg-purple-500",
+    obscene: "bg-yellow-500",
+    threat: "bg-rose-500",
+    sexual_explicit: "bg-pink-500",
   };
 
   const targetGroupColors = {
-    general: 'bg-blue-500',
-    identity: 'bg-indigo-500',
-    political: 'bg-cyan-500',
-    other: 'bg-gray-500'
+    general: "bg-blue-500",
+    identity: "bg-indigo-500",
+    political: "bg-cyan-500",
+    other: "bg-gray-500",
   };
 
   return (
@@ -82,18 +88,12 @@ function Insights() {
           📈 Dataset Insights
         </h1>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          Explore statistics and visualizations of the ToxiGen dataset — 
+          Explore statistics and visualizations of the ToxiGen dataset —
           understanding the data behind toxicity detection.
         </p>
       </div>
 
-      {error && (
-        <Alert 
-          type="warning" 
-          title="Demo Mode" 
-          message={error} 
-        />
-      )}
+      {error && <Alert type="warning" title="Demo Mode" message={error} />}
 
       {/* Overview Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -138,18 +138,22 @@ function Insights() {
             </h2>
           </CardHeader>
           <CardBody>
-            <PieChart 
-              toxic={stats.toxic_percentage} 
-              nonToxic={stats.non_toxic_percentage} 
+            <PieChart
+              toxic={stats.toxic_percentage}
+              nonToxic={stats.non_toxic_percentage}
             />
             <div className="flex justify-center gap-8 mt-6">
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 rounded-full bg-red-500"></div>
-                <span className="text-sm text-gray-600">Toxic ({stats.toxic_percentage}%)</span>
+                <span className="text-sm text-gray-600">
+                  Toxic ({stats.toxic_percentage}%)
+                </span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 rounded-full bg-green-500"></div>
-                <span className="text-sm text-gray-600">Non-Toxic ({stats.non_toxic_percentage}%)</span>
+                <span className="text-sm text-gray-600">
+                  Non-Toxic ({stats.non_toxic_percentage}%)
+                </span>
               </div>
             </div>
           </CardBody>
@@ -167,10 +171,12 @@ function Insights() {
             {Object.entries(stats.categories).map(([key, value]) => (
               <CategoryBar
                 key={key}
-                name={key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
+                name={key
+                  .replace(/_/g, " ")
+                  .replace(/\b\w/g, (c) => c.toUpperCase())}
                 count={value.count}
                 percentage={value.percentage}
-                color={categoryColors[key] || 'bg-gray-500'}
+                color={categoryColors[key] || "bg-gray-500"}
               />
             ))}
           </CardBody>
@@ -192,11 +198,17 @@ function Insights() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {Object.entries(stats.target_groups).map(([key, value]) => (
               <div key={key} className="text-center p-4 bg-gray-50 rounded-xl">
-                <div className={`w-16 h-16 mx-auto rounded-full ${targetGroupColors[key]} flex items-center justify-center text-white text-2xl font-bold mb-3`}>
+                <div
+                  className={`w-16 h-16 mx-auto rounded-full ${targetGroupColors[key]} flex items-center justify-center text-white text-2xl font-bold mb-3`}
+                >
                   {value.percentage}%
                 </div>
-                <h3 className="font-semibold text-gray-800 capitalize">{key}</h3>
-                <p className="text-sm text-gray-500">{value.count.toLocaleString()} samples</p>
+                <h3 className="font-semibold text-gray-800 capitalize">
+                  {key}
+                </h3>
+                <p className="text-sm text-gray-500">
+                  {value.count.toLocaleString()} samples
+                </p>
               </div>
             ))}
           </div>
@@ -218,49 +230,59 @@ function Insights() {
                 1
               </div>
               <div>
-                <h3 className="font-semibold text-gray-800">Balanced Dataset</h3>
+                <h3 className="font-semibold text-gray-800">
+                  Balanced Dataset
+                </h3>
                 <p className="text-sm text-gray-600 mt-1">
-                  The dataset is nearly balanced with 48.2% toxic and 51.8% non-toxic samples, 
-                  reducing class imbalance issues in model training.
+                  The dataset is nearly balanced with 48.2% toxic and 51.8%
+                  non-toxic samples, reducing class imbalance issues in model
+                  training.
                 </p>
               </div>
             </div>
-            
+
             <div className="flex gap-4">
               <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold flex-shrink-0">
                 2
               </div>
               <div>
-                <h3 className="font-semibold text-gray-800">Diverse Categories</h3>
+                <h3 className="font-semibold text-gray-800">
+                  Diverse Categories
+                </h3>
                 <p className="text-sm text-gray-600 mt-1">
-                  General toxicity (35.8%) and insults (24.6%) are most common, 
+                  General toxicity (35.8%) and insults (24.6%) are most common,
                   while sexual explicit content is rare (1.8%).
                 </p>
               </div>
             </div>
-            
+
             <div className="flex gap-4">
               <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold flex-shrink-0">
                 3
               </div>
               <div>
-                <h3 className="font-semibold text-gray-800">Identity-Related Content</h3>
+                <h3 className="font-semibold text-gray-800">
+                  Identity-Related Content
+                </h3>
                 <p className="text-sm text-gray-600 mt-1">
-                  28.4% of toxic content targets identity groups, highlighting the importance 
-                  of detecting identity-based attacks.
+                  28.4% of toxic content targets identity groups, highlighting
+                  the importance of detecting identity-based attacks.
                 </p>
               </div>
             </div>
-            
+
             <div className="flex gap-4">
               <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold flex-shrink-0">
                 4
               </div>
               <div>
-                <h3 className="font-semibold text-gray-800">Machine-Generated</h3>
+                <h3 className="font-semibold text-gray-800">
+                  Machine-Generated
+                </h3>
                 <p className="text-sm text-gray-600 mt-1">
-                  ToxiGen uses machine-generated text, providing diverse linguistic patterns 
-                  that may differ from human-written toxic content.
+                  ToxiGen uses machine-generated text, providing diverse
+                  linguistic patterns that may differ from human-written toxic
+                  content.
                 </p>
               </div>
             </div>
@@ -271,7 +293,16 @@ function Insights() {
       {/* Data Source */}
       <div className="text-center text-sm text-gray-500 py-4">
         <p>
-          Data source: <a href="https://huggingface.co/datasets/toxigen/toxigen-data" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">ToxiGen Dataset</a> (Hartvigsen et al., 2022)
+          Data source:{" "}
+          <a
+            href="https://huggingface.co/datasets/toxigen/toxigen-data"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:underline"
+          >
+            ToxiGen Dataset
+          </a>{" "}
+          (Hartvigsen et al., 2022)
         </p>
       </div>
     </div>

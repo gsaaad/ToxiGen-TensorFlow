@@ -1,48 +1,87 @@
-import { useState, useCallback } from 'react';
-import { useToxicity } from '../hooks/useToxicity';
-import { useWordImportance } from '../hooks/useWordImportance';
-import { ToxicityMeter } from '../components/ToxicityMeter';
-import { WordImportance } from '../components/WordImportance';
-import { NLPAnalysis } from '../components/NLPAnalysis';
-import { Alert, Badge, Card, CardBody, LoadingSpinner } from '../components/UI';
-import { formatPredictions } from '../utils/toxicity';
+import { useCallback, useState } from "react";
+import { NLPAnalysis } from "../components/NLPAnalysis";
+import { useToast } from "../components/Toast";
+import { ToxicityMeter } from "../components/ToxicityMeter";
+import { Alert, Badge, Card, CardBody, LoadingSpinner } from "../components/UI";
+import { WordImportance } from "../components/WordImportance";
+import { useToxicity } from "../hooks/useToxicity";
+import { useDebounce } from "../hooks/useUtils";
+import { useWordImportance } from "../hooks/useWordImportance";
+import { formatPredictions } from "../utils/toxicity";
 
 function Analyzer() {
-  const [text, setText] = useState('');
+  const [text, setText] = useState("");
   const [results, setResults] = useState(null);
   const [analyzing, setAnalyzing] = useState(false);
   const [showExplain, setShowExplain] = useState(false);
   
-  const { analyze, getModel, loading: modelLoading, error: modelError, ready } = useToxicity();
-  const { importance, analyzing: analyzingImportance, analyze: analyzeImportance, clear: clearImportance } = useWordImportance();
+  // Debounce text for NLP analysis (500ms delay)
+  const debouncedText = useDebounce(text, 500);
+  
+  // Toast notifications
+  const toast = useToast();
+
+  const {
+    analyze,
+    getModel,
+    loading: modelLoading,
+    error: modelError,
+    ready,
+  } = useToxicity();
+  const {
+    importance,
+    analyzing: analyzingImportance,
+    analyze: analyzeImportance,
+    clear: clearImportance,
+  } = useWordImportance();
 
   const analyzeText = useCallback(async () => {
     if (!text.trim() || !ready) return;
-    
+
     setAnalyzing(true);
     setResults(null);
     setShowExplain(false);
     clearImportance();
-    
+
     try {
       const predictions = await analyze(text);
       if (predictions) {
-        setResults(formatPredictions(predictions));
+        const formatted = formatPredictions(predictions);
+        setResults(formatted);
+        
+        // Show toast notification based on results
+        const hasToxic = formatted.some(r => r.match);
+        const toxicCount = formatted.filter(r => r.match).length;
+        
+        if (hasToxic) {
+          toast.warning(
+            `${toxicCount} toxicity categor${toxicCount > 1 ? 'ies' : 'y'} detected`,
+            'Analysis Complete'
+          );
+        } else {
+          toast.success('No toxicity detected in the text', 'Analysis Complete');
+        }
       }
     } catch (err) {
-      console.error('Analysis error:', err);
+      console.error("Analysis error:", err);
+      toast.error(err.message || 'Failed to analyze text', 'Analysis Error');
     } finally {
       setAnalyzing(false);
     }
-  }, [text, ready, analyze, clearImportance]);
+  }, [text, ready, analyze, clearImportance, toast]);
 
   const handleExplain = useCallback(async () => {
     const model = getModel();
     if (!model || !text.trim()) return;
-    
+
     setShowExplain(true);
-    await analyzeImportance(model, text);
-  }, [getModel, text, analyzeImportance]);
+    try {
+      await analyzeImportance(model, text);
+      toast.info('Word importance analysis complete', 'Explanation Ready');
+    } catch (err) {
+      toast.error('Failed to generate explanation', 'Error');
+    }
+  }, [getModel, text, analyzeImportance, toast]);
 
   const handleSampleClick = (sample) => {
     setText(sample);
@@ -52,20 +91,27 @@ function Analyzer() {
   };
 
   const handleClear = () => {
-    setText('');
+    setText("");
     setResults(null);
     setShowExplain(false);
     clearImportance();
+    toast.info('Analysis cleared', 'Reset');
   };
 
   // Check if any category is flagged as toxic
-  const hasToxicity = results?.some(r => r.match);
-  const toxicCount = results?.filter(r => r.match).length || 0;
+  const hasToxicity = results?.some((r) => r.match);
+  const toxicCount = results?.filter((r) => r.match).length || 0;
 
   const sampleTexts = [
     { text: "I really enjoyed reading your article. Great work!", emoji: "😊" },
-    { text: "You're such a worthless idiot who can't do anything right.", emoji: "😠" },
-    { text: "I disagree with your opinion but respect your perspective.", emoji: "🤝" },
+    {
+      text: "You're such a worthless idiot who can't do anything right.",
+      emoji: "😠",
+    },
+    {
+      text: "I disagree with your opinion but respect your perspective.",
+      emoji: "🤝",
+    },
     { text: "The weather today is quite pleasant for a walk.", emoji: "☀️" },
     { text: "People like you should be eliminated from society.", emoji: "⚠️" },
   ];
@@ -78,8 +124,8 @@ function Analyzer() {
           🔬 Text Toxicity Analyzer
         </h1>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          Analyze any text for toxicity across 7 categories using TensorFlow.js — 
-          all processing happens locally in your browser.
+          Analyze any text for toxicity across 7 categories using TensorFlow.js
+          — all processing happens locally in your browser.
         </p>
         <div className="flex items-center justify-center gap-2 mt-3">
           <Badge variant="success">🔒 Privacy-First</Badge>
@@ -94,25 +140,25 @@ function Analyzer() {
           <CardBody className="flex items-center gap-4">
             <LoadingSpinner size="sm" />
             <div>
-              <p className="font-semibold text-blue-800">Loading TensorFlow.js Model</p>
-              <p className="text-sm text-blue-600">This may take a few seconds on first load...</p>
+              <p className="font-semibold text-blue-800">
+                Loading TensorFlow.js Model
+              </p>
+              <p className="text-sm text-blue-600">
+                This may take a few seconds on first load...
+              </p>
             </div>
           </CardBody>
         </Card>
       )}
 
       {modelError && (
-        <Alert 
-          type="error" 
-          title="Model Error" 
-          message={modelError}
-        />
+        <Alert type="error" title="Model Error" message={modelError} />
       )}
 
       {ready && !modelLoading && (
-        <Alert 
-          type="success" 
-          title="Model Ready" 
+        <Alert
+          type="success"
+          title="Model Ready"
           message="TensorFlow.js toxicity model loaded successfully. All analysis runs locally in your browser."
         />
       )}
@@ -121,42 +167,51 @@ function Analyzer() {
       <Card hover>
         <CardBody className="space-y-4">
           <div className="flex items-center justify-between">
-            <label className="text-sm font-semibold text-gray-700">
+            <label htmlFor="text-input" className="text-sm font-semibold text-gray-700">
               Enter Text to Analyze
             </label>
-            <span className="text-xs text-gray-400">
+            <span className="text-xs text-gray-400" aria-live="polite">
               {text.length} characters
             </span>
           </div>
-          
+
           <textarea
+            id="text-input"
+            name="text-input"
             value={text}
             onChange={(e) => setText(e.target.value)}
+            aria-label="Text to analyze for toxicity"
+            aria-describedby="text-input-hint"
             placeholder="Type or paste any text here to analyze its toxicity..."
             rows={5}
             disabled={modelLoading || !ready}
             className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 resize-none transition-all disabled:bg-gray-50 disabled:cursor-not-allowed text-gray-800 placeholder-gray-400"
           />
-          
-          <div className="flex flex-wrap items-center gap-3">
+          <p id="text-input-hint" className="sr-only">
+            Enter text and click Analyze to check for toxicity across 7 categories
+          </p>
+
+          <div className="flex flex-wrap items-center gap-3" role="group" aria-label="Analysis actions">
             <button
               onClick={analyzeText}
               disabled={!text.trim() || analyzing || !ready}
-              className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-blue-200 hover:shadow-xl hover:shadow-blue-300 flex items-center gap-2"
+              aria-busy={analyzing}
+              className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-blue-200 hover:shadow-xl hover:shadow-blue-300 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
               {analyzing ? (
                 <>
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  Analyzing...
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" aria-hidden="true" />
+                  <span>Analyzing...</span>
+                  <span className="sr-only">Analysis in progress</span>
                 </>
               ) : (
                 <>
-                  <span>🔍</span>
+                  <span aria-hidden="true">🔍</span>
                   Analyze Text
                 </>
               )}
             </button>
-            
+
             {results && (
               <button
                 onClick={handleExplain}
@@ -176,7 +231,7 @@ function Analyzer() {
                 )}
               </button>
             )}
-            
+
             {text && (
               <button
                 onClick={handleClear}
@@ -214,25 +269,28 @@ function Analyzer() {
       {results && (
         <Card className="overflow-hidden">
           {/* Results Header */}
-          <div className={`px-6 py-4 ${hasToxicity ? 'bg-gradient-to-r from-red-500 to-orange-500' : 'bg-gradient-to-r from-green-500 to-emerald-500'}`}>
+          <div
+            className={`px-6 py-4 ${hasToxicity ? "bg-gradient-to-r from-red-500 to-orange-500" : "bg-gradient-to-r from-green-500 to-emerald-500"}`}
+          >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <span className="text-3xl">{hasToxicity ? '⚠️' : '✅'}</span>
+                <span className="text-3xl">{hasToxicity ? "⚠️" : "✅"}</span>
                 <div>
                   <h2 className="text-xl font-bold text-white">
-                    {hasToxicity ? 'Toxicity Detected' : 'No Toxicity Detected'}
+                    {hasToxicity ? "Toxicity Detected" : "No Toxicity Detected"}
                   </h2>
                   <p className="text-white/80 text-sm">
-                    {hasToxicity 
-                      ? `${toxicCount} categor${toxicCount > 1 ? 'ies' : 'y'} flagged as toxic`
-                      : 'Text appears to be non-toxic across all categories'
-                    }
+                    {hasToxicity
+                      ? `${toxicCount} categor${toxicCount > 1 ? "ies" : "y"} flagged as toxic`
+                      : "Text appears to be non-toxic across all categories"}
                   </p>
                 </div>
               </div>
               {hasToxicity && (
                 <div className="bg-white/20 px-4 py-2 rounded-lg">
-                  <span className="text-white font-bold text-2xl">{toxicCount}/7</span>
+                  <span className="text-white font-bold text-2xl">
+                    {toxicCount}/7
+                  </span>
                 </div>
               )}
             </div>
@@ -261,9 +319,9 @@ function Analyzer() {
 
       {/* Word Importance Section */}
       {showExplain && (
-        <WordImportance 
-          importance={importance} 
-          analyzing={analyzingImportance} 
+        <WordImportance
+          importance={importance}
+          analyzing={analyzingImportance}
         />
       )}
 
@@ -272,12 +330,14 @@ function Analyzer() {
         <div className="space-y-4">
           <div className="flex items-center gap-2">
             <span className="text-xl">🧠</span>
-            <h2 className="text-xl font-bold text-gray-800">Advanced NLP Analysis</h2>
+            <h2 className="text-xl font-bold text-gray-800">
+              Advanced NLP Analysis
+            </h2>
             <span className="px-2 py-0.5 bg-purple-100 text-purple-700 rounded-full text-xs font-medium">
               10 Analyses
             </span>
           </div>
-          <NLPAnalysis text={text} />
+          <NLPAnalysis text={debouncedText} />
         </div>
       )}
 
@@ -285,15 +345,24 @@ function Analyzer() {
       <Card className="bg-gradient-to-br from-slate-50 to-slate-100 border-slate-200">
         <CardBody>
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-xl bg-slate-200 flex items-center justify-center text-2xl flex-shrink-0">
+            <div className="w-12 h-12 rounded-xl bg-slate-200 flex items-center justify-center text-2xl flex-shrink-0" aria-hidden="true">
               ℹ️
             </div>
             <div>
               <h3 className="font-semibold text-gray-800 mb-2">How It Works</h3>
-              <ul className="text-sm text-gray-600 space-y-1">
-                <li>• Uses TensorFlow.js toxicity model running entirely in your browser</li>
-                <li>• Analyzes text across 7 categories: toxicity, insult, threat, identity attack, obscene, severe toxicity, and sexual explicit</li>
-                <li>• "Explain Results" shows which words contribute most to the toxicity score (SHAP-style analysis)</li>
+              <ul className="text-sm text-gray-600 space-y-1" role="list">
+                <li>
+                  • Uses TensorFlow.js toxicity model running entirely in your
+                  browser
+                </li>
+                <li>
+                  • Analyzes text across 7 categories: toxicity, insult, threat,
+                  identity attack, obscene, severe toxicity, and sexual explicit
+                </li>
+                <li>
+                  • "Explain Results" shows which words contribute most to the
+                  toxicity score (SHAP-style analysis)
+                </li>
                 <li>• Your text never leaves your device — complete privacy</li>
               </ul>
             </div>

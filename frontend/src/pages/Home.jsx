@@ -13,8 +13,8 @@ function Home() {
           Text Toxicity Analyzer
         </h1>
         <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-          Analyze text for toxicity across 7 categories with explainable AI. 
-          All processing happens locally — your data never leaves your browser.
+          Analyze text for toxicity across 7 categories with explainable AI. All
+          processing happens locally — your data never leaves your browser.
         </p>
         <div className="flex justify-center gap-4 flex-wrap">
           <Link
@@ -37,55 +37,82 @@ function Home() {
       {/* Features Grid */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 py-12">
         <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow group">
-          <div className="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">🔬</div>
-          <h3 className="font-bold text-lg mb-2 text-gray-800">7-Category Toxicity Analysis</h3>
+          <div className="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
+            🔬
+          </div>
+          <h3 className="font-bold text-lg mb-2 text-gray-800">
+            7-Category Toxicity Analysis
+          </h3>
           <p className="text-gray-600 text-sm">
-            Real-time detection using TensorFlow.js with safety labels and visual meters.
+            Real-time detection using TensorFlow.js with safety labels and
+            visual meters.
           </p>
         </div>
 
         <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow group">
-          <div className="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">💡</div>
-          <h3 className="font-bold text-lg mb-2 text-gray-800">Explainable AI (SHAP)</h3>
+          <div className="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
+            💡
+          </div>
+          <h3 className="font-bold text-lg mb-2 text-gray-800">
+            Explainable AI (SHAP)
+          </h3>
           <p className="text-gray-600 text-sm">
             Word importance analysis shows exactly why text is flagged as toxic.
           </p>
         </div>
 
         <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow group">
-          <div className="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">✨</div>
-          <h3 className="font-bold text-lg mb-2 text-gray-800">Toxic Text Rewriter</h3>
+          <div className="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
+            ✨
+          </div>
+          <h3 className="font-bold text-lg mb-2 text-gray-800">
+            Toxic Text Rewriter
+          </h3>
           <p className="text-gray-600 text-sm">
             Transform toxic language into constructive, respectful alternatives.
           </p>
         </div>
 
         <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow group">
-          <div className="w-14 h-14 bg-orange-100 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">😊</div>
-          <h3 className="font-bold text-lg mb-2 text-gray-800">Sentiment & Emotions</h3>
+          <div className="w-14 h-14 bg-orange-100 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
+            😊
+          </div>
+          <h3 className="font-bold text-lg mb-2 text-gray-800">
+            Sentiment & Emotions
+          </h3>
           <p className="text-gray-600 text-sm">
             Analyze emotional tone, detect 8 emotions, and sentiment breakdown.
           </p>
         </div>
 
         <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow group">
-          <div className="w-14 h-14 bg-teal-100 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">📖</div>
-          <h3 className="font-bold text-lg mb-2 text-gray-800">Readability Metrics</h3>
+          <div className="w-14 h-14 bg-teal-100 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
+            📖
+          </div>
+          <h3 className="font-bold text-lg mb-2 text-gray-800">
+            Readability Metrics
+          </h3>
           <p className="text-gray-600 text-sm">
             Flesch-Kincaid, Gunning Fog, SMOG scores with grade level analysis.
           </p>
         </div>
 
         <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow group">
-          <div className="w-14 h-14 bg-pink-100 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">🏷️</div>
-          <h3 className="font-bold text-lg mb-2 text-gray-800">Named Entity Recognition</h3>
+          <div className="w-14 h-14 bg-pink-100 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
+            🏷️
+          </div>
+          <h3 className="font-bold text-lg mb-2 text-gray-800">
+            Named Entity Recognition
+          </h3>
           <p className="text-gray-600 text-sm">
             Detect people, places, organizations, dates, and monetary values.
           </p>
         </div>
 
         <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow group">
-          <div className="w-14 h-14 bg-indigo-100 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">🔤</div>
+          <div className="w-14 h-14 bg-indigo-100 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
+            🔤
+          </div>
           <h3 className="font-bold text-lg mb-2 text-gray-800">POS Tagging</h3>
           <p className="text-gray-600 text-sm">
             Part-of-speech analysis with visual distribution breakdown.
@@ -93,16 +120,24 @@ function Home() {
         </div>
 
         <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow group">
-          <div className="w-14 h-14 bg-yellow-100 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">⚖️</div>
-          <h3 className="font-bold text-lg mb-2 text-gray-800">Text Comparison</h3>
+          <div className="w-14 h-14 bg-yellow-100 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
+            ⚖️
+          </div>
+          <h3 className="font-bold text-lg mb-2 text-gray-800">
+            Text Comparison
+          </h3>
           <p className="text-gray-600 text-sm">
             Compare two texts side-by-side for toxicity and NLP metrics.
           </p>
         </div>
 
         <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow group">
-          <div className="w-14 h-14 bg-cyan-100 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">🔑</div>
-          <h3 className="font-bold text-lg mb-2 text-gray-800">Keyword Extraction</h3>
+          <div className="w-14 h-14 bg-cyan-100 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
+            🔑
+          </div>
+          <h3 className="font-bold text-lg mb-2 text-gray-800">
+            Keyword Extraction
+          </h3>
           <p className="text-gray-600 text-sm">
             Auto-extract key terms with importance scores and auto-tags.
           </p>
@@ -114,22 +149,61 @@ function Home() {
         <h2 className="text-2xl font-bold text-gray-800 mb-2">
           7 Detection Categories
         </h2>
-        <p className="text-gray-500 mb-6">Our model analyzes text across multiple toxicity dimensions</p>
+        <p className="text-gray-500 mb-6">
+          Our model analyzes text across multiple toxicity dimensions
+        </p>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {[
-            { name: "Toxicity", desc: "General toxic content", icon: "☠️", color: "bg-red-500" },
-            { name: "Severe Toxicity", desc: "Extremely harmful content", icon: "💀", color: "bg-red-700" },
-            { name: "Identity Attack", desc: "Targeting identity groups", icon: "🎯", color: "bg-purple-500" },
-            { name: "Insult", desc: "Insulting language", icon: "😤", color: "bg-orange-500" },
-            { name: "Threat", desc: "Threatening content", icon: "⚠️", color: "bg-rose-500" },
-            { name: "Obscene", desc: "Vulgar language", icon: "🤬", color: "bg-yellow-500" },
-            { name: "Sexual Explicit", desc: "Sexual content", icon: "🔞", color: "bg-pink-500" },
+            {
+              name: "Toxicity",
+              desc: "General toxic content",
+              icon: "☠️",
+              color: "bg-red-500",
+            },
+            {
+              name: "Severe Toxicity",
+              desc: "Extremely harmful content",
+              icon: "💀",
+              color: "bg-red-700",
+            },
+            {
+              name: "Identity Attack",
+              desc: "Targeting identity groups",
+              icon: "🎯",
+              color: "bg-purple-500",
+            },
+            {
+              name: "Insult",
+              desc: "Insulting language",
+              icon: "😤",
+              color: "bg-orange-500",
+            },
+            {
+              name: "Threat",
+              desc: "Threatening content",
+              icon: "⚠️",
+              color: "bg-rose-500",
+            },
+            {
+              name: "Obscene",
+              desc: "Vulgar language",
+              icon: "🤬",
+              color: "bg-yellow-500",
+            },
+            {
+              name: "Sexual Explicit",
+              desc: "Sexual content",
+              icon: "🔞",
+              color: "bg-pink-500",
+            },
           ].map((category) => (
             <div
               key={category.name}
               className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors"
             >
-              <div className={`w-10 h-10 ${category.color} rounded-lg flex items-center justify-center text-white text-lg`}>
+              <div
+                className={`w-10 h-10 ${category.color} rounded-lg flex items-center justify-center text-white text-lg`}
+              >
                 {category.icon}
               </div>
               <div>

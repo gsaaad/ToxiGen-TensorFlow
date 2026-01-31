@@ -3,8 +3,8 @@
  * Transform toxic text into neutral, constructive alternatives
  */
 
-import { useState, useCallback } from 'react';
-import { rewriteToxicText, getSafeInsults, analyzeForRewriting } from '../utils/rewriter';
+import { useCallback, useState } from "react";
+import { analyzeForRewriting, getSafeInsults } from "../utils/rewriter";
 
 // ============================================
 // SAFE ALTERNATIVES PANEL
@@ -12,14 +12,16 @@ import { rewriteToxicText, getSafeInsults, analyzeForRewriting } from '../utils/
 
 function SafeAlternativesPanel() {
   const alternatives = getSafeInsults();
-  
+
   return (
     <div className="bg-gradient-to-br from-green-50 to-teal-50 rounded-xl p-6">
       <div className="flex items-center gap-2 mb-4">
         <span className="text-xl">💡</span>
-        <h3 className="text-lg font-semibold text-gray-800">Safe Alternatives Cheatsheet</h3>
+        <h3 className="text-lg font-semibold text-gray-800">
+          Safe Alternatives Cheatsheet
+        </h3>
       </div>
-      
+
       <div className="space-y-3">
         {alternatives.map((alt, i) => (
           <div key={i} className="bg-white rounded-lg p-3 shadow-sm">
@@ -59,7 +61,7 @@ function ChangesBreakdown({ changes }) {
       </div>
     );
   }
-  
+
   return (
     <div className="space-y-2">
       <h4 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
@@ -67,7 +69,10 @@ function ChangesBreakdown({ changes }) {
       </h4>
       <div className="space-y-2 max-h-48 overflow-y-auto">
         {changes.map((change, i) => (
-          <div key={i} className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg text-sm">
+          <div
+            key={i}
+            className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg text-sm"
+          >
             <span className="px-2 py-0.5 bg-red-100 text-red-700 rounded line-through">
               {change.original}
             </span>
@@ -88,7 +93,7 @@ function ChangesBreakdown({ changes }) {
 
 function SuggestionsPanel({ suggestions }) {
   if (suggestions.length === 0) return null;
-  
+
   return (
     <div className="mt-4 space-y-3">
       <h4 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
@@ -96,10 +101,15 @@ function SuggestionsPanel({ suggestions }) {
       </h4>
       {suggestions.map((suggestion, i) => (
         <div key={i} className="bg-blue-50 rounded-lg p-3">
-          <div className="text-xs text-blue-600 font-medium mb-2">{suggestion.type}</div>
+          <div className="text-xs text-blue-600 font-medium mb-2">
+            {suggestion.type}
+          </div>
           <div className="space-y-1">
             {suggestion.alternatives.map((alt, j) => (
-              <div key={j} className="flex items-center gap-2 text-sm text-gray-700">
+              <div
+                key={j}
+                className="flex items-center gap-2 text-sm text-gray-700"
+              >
                 <span className="text-blue-400">•</span>
                 <span>"{alt}"</span>
               </div>
@@ -117,28 +127,54 @@ function SuggestionsPanel({ suggestions }) {
 
 function SeverityIndicator({ severity, improvementPercent }) {
   const severityConfig = {
-    none: { color: 'green', label: 'Clean', emoji: '✨', bg: 'bg-green-100 text-green-700' },
-    low: { color: 'yellow', label: 'Mildly Toxic', emoji: '😐', bg: 'bg-yellow-100 text-yellow-700' },
-    medium: { color: 'orange', label: 'Moderately Toxic', emoji: '😠', bg: 'bg-orange-100 text-orange-700' },
-    high: { color: 'red', label: 'Highly Toxic', emoji: '😡', bg: 'bg-red-100 text-red-700' }
+    none: {
+      color: "green",
+      label: "Clean",
+      emoji: "✨",
+      bg: "bg-green-100 text-green-700",
+    },
+    low: {
+      color: "yellow",
+      label: "Mildly Toxic",
+      emoji: "😐",
+      bg: "bg-yellow-100 text-yellow-700",
+    },
+    medium: {
+      color: "orange",
+      label: "Moderately Toxic",
+      emoji: "😠",
+      bg: "bg-orange-100 text-orange-700",
+    },
+    high: {
+      color: "red",
+      label: "Highly Toxic",
+      emoji: "😡",
+      bg: "bg-red-100 text-red-700",
+    },
   };
-  
+
   const config = severityConfig[severity] || severityConfig.none;
-  
+
   return (
     <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
       <div className="flex items-center gap-3">
         <span className="text-3xl">{config.emoji}</span>
         <div>
-          <div className={`font-semibold ${config.bg} px-2 py-0.5 rounded inline-block`}>
+          <div
+            className={`font-semibold ${config.bg} px-2 py-0.5 rounded inline-block`}
+          >
             {config.label}
           </div>
-          <div className="text-xs text-gray-500 mt-1">Original text toxicity level</div>
+          <div className="text-xs text-gray-500 mt-1">
+            Original text toxicity level
+          </div>
         </div>
       </div>
       {improvementPercent > 0 && (
         <div className="text-right">
-          <div className="text-2xl font-bold text-green-600">+{improvementPercent}%</div>
+          <div className="text-2xl font-bold text-green-600">
+            +{improvementPercent}%
+          </div>
           <div className="text-xs text-gray-500">Improvement</div>
         </div>
       )}
@@ -151,15 +187,15 @@ function SeverityIndicator({ severity, improvementPercent }) {
 // ============================================
 
 export function TextRewriter() {
-  const [inputText, setInputText] = useState('');
+  const [inputText, setInputText] = useState("");
   const [result, setResult] = useState(null);
   const [showCheatsheet, setShowCheatsheet] = useState(false);
-  const [formality, setFormality] = useState('neutral');
+  const [formality, setFormality] = useState("neutral");
   const [copied, setCopied] = useState(false);
 
   const handleRewrite = useCallback(() => {
     if (!inputText.trim()) return;
-    
+
     const analysis = analyzeForRewriting(inputText);
     setResult(analysis);
   }, [inputText]);
@@ -173,16 +209,25 @@ export function TextRewriter() {
   }, [result]);
 
   const handleClear = useCallback(() => {
-    setInputText('');
+    setInputText("");
     setResult(null);
   }, []);
 
   const sampleTexts = [
-    { text: "You're such an idiot, why can't you understand anything?", emoji: "😠" },
+    {
+      text: "You're such an idiot, why can't you understand anything?",
+      emoji: "😠",
+    },
     { text: "Shut up! Nobody asked for your opinion.", emoji: "🤬" },
     { text: "What the hell is wrong with you? This is pathetic!", emoji: "😡" },
-    { text: "I hate this stupid idea, it's the worst thing ever.", emoji: "👎" },
-    { text: "You're so annoying, just go away and leave me alone!", emoji: "😤" }
+    {
+      text: "I hate this stupid idea, it's the worst thing ever.",
+      emoji: "👎",
+    },
+    {
+      text: "You're so annoying, just go away and leave me alone!",
+      emoji: "😤",
+    },
   ];
 
   return (
@@ -204,7 +249,7 @@ export function TextRewriter() {
           onClick={() => setShowCheatsheet(!showCheatsheet)}
           className="px-4 py-2 bg-gradient-to-r from-green-100 to-teal-100 text-green-700 rounded-xl font-medium hover:from-green-200 hover:to-teal-200 transition-colors"
         >
-          {showCheatsheet ? 'Hide' : 'Show'} Cheatsheet
+          {showCheatsheet ? "Hide" : "Show"} Cheatsheet
         </button>
       </div>
 
@@ -227,7 +272,7 @@ export function TextRewriter() {
             <option value="casual">Casual tone</option>
           </select>
         </div>
-        
+
         <textarea
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
@@ -235,7 +280,7 @@ export function TextRewriter() {
           rows={4}
           className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-100 resize-none transition-all text-gray-800 placeholder-gray-400"
         />
-        
+
         <div className="flex flex-wrap items-center gap-3 mt-4">
           <button
             onClick={handleRewrite}
@@ -245,7 +290,7 @@ export function TextRewriter() {
             <span>✨</span>
             Rewrite Text
           </button>
-          
+
           {inputText && (
             <button
               onClick={handleClear}
@@ -279,12 +324,12 @@ export function TextRewriter() {
         <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
           {/* Severity Header */}
           <div className="p-6 border-b border-gray-100">
-            <SeverityIndicator 
-              severity={result.severity} 
+            <SeverityIndicator
+              severity={result.severity}
               improvementPercent={result.improvementPercent}
             />
           </div>
-          
+
           <div className="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-gray-100">
             {/* Original */}
             <div className="p-6">
@@ -293,15 +338,22 @@ export function TextRewriter() {
                 <h3 className="font-semibold text-gray-700">Original</h3>
               </div>
               <div className="p-4 bg-red-50 rounded-xl border border-red-100">
-                <p className="text-gray-800 whitespace-pre-wrap">{result.original}</p>
+                <p className="text-gray-800 whitespace-pre-wrap">
+                  {result.original}
+                </p>
               </div>
-              
+
               {result.toxicWordsFound.length > 0 && (
                 <div className="mt-3">
-                  <div className="text-xs text-gray-500 mb-1">Toxic elements detected:</div>
+                  <div className="text-xs text-gray-500 mb-1">
+                    Toxic elements detected:
+                  </div>
                   <div className="flex flex-wrap gap-1">
                     {result.toxicWordsFound.map((word, i) => (
-                      <span key={i} className="px-2 py-0.5 bg-red-100 text-red-700 rounded text-xs">
+                      <span
+                        key={i}
+                        className="px-2 py-0.5 bg-red-100 text-red-700 rounded text-xs"
+                      >
                         {word}
                       </span>
                     ))}
@@ -309,7 +361,7 @@ export function TextRewriter() {
                 </div>
               )}
             </div>
-            
+
             {/* Rewritten */}
             <div className="p-6">
               <div className="flex items-center justify-between mb-3">
@@ -335,9 +387,11 @@ export function TextRewriter() {
                 </button>
               </div>
               <div className="p-4 bg-green-50 rounded-xl border border-green-100">
-                <p className="text-gray-800 whitespace-pre-wrap">{result.rewritten}</p>
+                <p className="text-gray-800 whitespace-pre-wrap">
+                  {result.rewritten}
+                </p>
               </div>
-              
+
               {!result.wasChanged && (
                 <div className="mt-3 flex items-center gap-2 text-green-600 text-sm">
                   <span>✓</span>
@@ -346,7 +400,7 @@ export function TextRewriter() {
               )}
             </div>
           </div>
-          
+
           {/* Changes & Suggestions */}
           <div className="p-6 bg-gray-50 border-t border-gray-100">
             <div className="grid md:grid-cols-2 gap-6">

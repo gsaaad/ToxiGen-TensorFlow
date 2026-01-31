@@ -3,45 +3,60 @@
  * Compare two texts side-by-side for toxicity and NLP analysis
  */
 
-import { useState, useCallback, useMemo } from 'react';
-import { useToxicity } from '../hooks/useToxicity';
-import { ToxicityMeter } from '../components/ToxicityMeter';
-import { formatPredictions } from '../utils/toxicity';
-import { 
-  analyzeSentiment, 
-  calculateReadability, 
+import { useCallback, useMemo, useState } from "react";
+import { ToxicityMeter } from "../components/ToxicityMeter";
+import { useToxicity } from "../hooks/useToxicity";
+import {
+  analyzeSentiment,
+  calculateReadability,
+  compareTexts,
   getTextStatistics,
-  compareTexts 
-} from '../utils/nlp';
+} from "../utils/nlp";
+import { formatPredictions } from "../utils/toxicity";
 
-function CompareCard({ title, color, text, setText, results, analyzing, onAnalyze, disabled }) {
-  const stats = useMemo(() => text ? getTextStatistics(text) : null, [text]);
-  const sentiment = useMemo(() => text ? analyzeSentiment(text) : null, [text]);
-  const readability = useMemo(() => text ? calculateReadability(text) : null, [text]);
-  
+function CompareCard({
+  title,
+  color,
+  text,
+  setText,
+  results,
+  analyzing,
+  onAnalyze,
+  disabled,
+}) {
+  const stats = useMemo(() => (text ? getTextStatistics(text) : null), [text]);
+  const sentiment = useMemo(
+    () => (text ? analyzeSentiment(text) : null),
+    [text],
+  );
+  const readability = useMemo(
+    () => (text ? calculateReadability(text) : null),
+    [text],
+  );
+
   const colorClasses = {
     blue: {
-      gradient: 'from-blue-500 to-blue-600',
-      light: 'bg-blue-50',
-      border: 'border-blue-200',
-      text: 'text-blue-700'
+      gradient: "from-blue-500 to-blue-600",
+      light: "bg-blue-50",
+      border: "border-blue-200",
+      text: "text-blue-700",
     },
     purple: {
-      gradient: 'from-purple-500 to-purple-600',
-      light: 'bg-purple-50',
-      border: 'border-purple-200',
-      text: 'text-purple-700'
-    }
+      gradient: "from-purple-500 to-purple-600",
+      light: "bg-purple-50",
+      border: "border-purple-200",
+      text: "text-purple-700",
+    },
   };
-  
+
   const c = colorClasses[color];
-  
+
   return (
     <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
       <div className={`px-6 py-4 bg-gradient-to-r ${c.gradient} text-white`}>
         <h3 className="font-bold text-lg">{title}</h3>
       </div>
-      
+
       <div className="p-6 space-y-4">
         <textarea
           value={text}
@@ -50,7 +65,7 @@ function CompareCard({ title, color, text, setText, results, analyzing, onAnalyz
           rows={4}
           className={`w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:${c.border} focus:ring-4 focus:ring-${color}-100 resize-none transition-all`}
         />
-        
+
         <button
           onClick={onAnalyze}
           disabled={!text?.trim() || disabled || analyzing}
@@ -68,29 +83,37 @@ function CompareCard({ title, color, text, setText, results, analyzing, onAnalyz
             </>
           )}
         </button>
-        
+
         {/* Quick Stats */}
         {stats && stats.words > 0 && (
           <div className="grid grid-cols-3 gap-2 text-center">
             <div className={`p-2 ${c.light} rounded-lg`}>
-              <div className="text-lg font-bold text-gray-800">{stats.words}</div>
+              <div className="text-lg font-bold text-gray-800">
+                {stats.words}
+              </div>
               <div className="text-xs text-gray-500">Words</div>
             </div>
             <div className={`p-2 ${c.light} rounded-lg`}>
-              <div className="text-lg font-bold text-gray-800">{sentiment?.emoji}</div>
+              <div className="text-lg font-bold text-gray-800">
+                {sentiment?.emoji}
+              </div>
               <div className="text-xs text-gray-500">{sentiment?.label}</div>
             </div>
             <div className={`p-2 ${c.light} rounded-lg`}>
-              <div className="text-lg font-bold text-gray-800">{readability?.gradeLevel?.split(' ')[0]}</div>
+              <div className="text-lg font-bold text-gray-800">
+                {readability?.gradeLevel?.split(" ")[0]}
+              </div>
               <div className="text-xs text-gray-500">Level</div>
             </div>
           </div>
         )}
-        
+
         {/* Toxicity Results */}
         {results && (
           <div className="space-y-3 pt-4 border-t border-gray-100">
-            <h4 className="text-sm font-semibold text-gray-700">Toxicity Results</h4>
+            <h4 className="text-sm font-semibold text-gray-700">
+              Toxicity Results
+            </h4>
             {results
               .sort((a, b) => b.probability - a.probability)
               .slice(0, 4)
@@ -110,30 +133,30 @@ function CompareCard({ title, color, text, setText, results, analyzing, onAnalyz
 }
 
 function Compare() {
-  const [textA, setTextA] = useState('');
-  const [textB, setTextB] = useState('');
+  const [textA, setTextA] = useState("");
+  const [textB, setTextB] = useState("");
   const [resultsA, setResultsA] = useState(null);
   const [resultsB, setResultsB] = useState(null);
   const [analyzingA, setAnalyzingA] = useState(false);
   const [analyzingB, setAnalyzingB] = useState(false);
-  
+
   const { analyze, ready, loading: modelLoading } = useToxicity();
-  
+
   // Calculate similarity
   const similarity = useMemo(() => {
     if (!textA?.trim() || !textB?.trim()) return null;
     return compareTexts(textA, textB);
   }, [textA, textB]);
-  
+
   // Calculate max toxicity for each
   const maxToxicityA = useMemo(() => {
     if (!resultsA) return 0;
-    return Math.max(...resultsA.map(r => r.probability));
+    return Math.max(...resultsA.map((r) => r.probability));
   }, [resultsA]);
-  
+
   const maxToxicityB = useMemo(() => {
     if (!resultsB) return 0;
-    return Math.max(...resultsB.map(r => r.probability));
+    return Math.max(...resultsB.map((r) => r.probability));
   }, [resultsB]);
 
   const analyzeA = useCallback(async () => {
@@ -143,7 +166,7 @@ function Compare() {
       const predictions = await analyze(textA);
       if (predictions) setResultsA(formatPredictions(predictions));
     } catch (err) {
-      console.error('Analysis error:', err);
+      console.error("Analysis error:", err);
     } finally {
       setAnalyzingA(false);
     }
@@ -156,7 +179,7 @@ function Compare() {
       const predictions = await analyze(textB);
       if (predictions) setResultsB(formatPredictions(predictions));
     } catch (err) {
-      console.error('Analysis error:', err);
+      console.error("Analysis error:", err);
     } finally {
       setAnalyzingB(false);
     }
@@ -235,19 +258,21 @@ function Compare() {
             <span>📊</span>
             Comparison Results
           </h3>
-          
+
           <div className="grid md:grid-cols-3 gap-6">
             {/* Text A Summary */}
             <div className="p-4 bg-blue-50 rounded-xl text-center">
-              <div className="text-sm text-blue-600 mb-1">Text A Max Toxicity</div>
+              <div className="text-sm text-blue-600 mb-1">
+                Text A Max Toxicity
+              </div>
               <div className="text-3xl font-bold text-blue-700">
                 {(maxToxicityA * 100).toFixed(1)}%
               </div>
               <div className="text-sm text-gray-500 mt-1">
-                {maxToxicityA > 0.5 ? '⚠️ Toxic' : '✅ Safe'}
+                {maxToxicityA > 0.5 ? "⚠️ Toxic" : "✅ Safe"}
               </div>
             </div>
-            
+
             {/* Similarity */}
             {similarity && (
               <div className="p-4 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl text-center">
@@ -260,35 +285,49 @@ function Compare() {
                 </div>
               </div>
             )}
-            
+
             {/* Text B Summary */}
             <div className="p-4 bg-purple-50 rounded-xl text-center">
-              <div className="text-sm text-purple-600 mb-1">Text B Max Toxicity</div>
+              <div className="text-sm text-purple-600 mb-1">
+                Text B Max Toxicity
+              </div>
               <div className="text-3xl font-bold text-purple-700">
                 {(maxToxicityB * 100).toFixed(1)}%
               </div>
               <div className="text-sm text-gray-500 mt-1">
-                {maxToxicityB > 0.5 ? '⚠️ Toxic' : '✅ Safe'}
+                {maxToxicityB > 0.5 ? "⚠️ Toxic" : "✅ Safe"}
               </div>
             </div>
           </div>
-          
+
           {/* Winner/Summary */}
           {resultsA && resultsB && (
             <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl text-center">
               {maxToxicityA > maxToxicityB ? (
                 <p className="text-gray-700">
-                  <span className="font-semibold text-purple-700">Text B</span> is 
-                  <span className="font-semibold text-green-600"> {((maxToxicityA - maxToxicityB) * 100).toFixed(1)}% less toxic</span> than Text A
+                  <span className="font-semibold text-purple-700">Text B</span>{" "}
+                  is
+                  <span className="font-semibold text-green-600">
+                    {" "}
+                    {((maxToxicityA - maxToxicityB) * 100).toFixed(1)}% less
+                    toxic
+                  </span>{" "}
+                  than Text A
                 </p>
               ) : maxToxicityB > maxToxicityA ? (
                 <p className="text-gray-700">
-                  <span className="font-semibold text-blue-700">Text A</span> is 
-                  <span className="font-semibold text-green-600"> {((maxToxicityB - maxToxicityA) * 100).toFixed(1)}% less toxic</span> than Text B
+                  <span className="font-semibold text-blue-700">Text A</span> is
+                  <span className="font-semibold text-green-600">
+                    {" "}
+                    {((maxToxicityB - maxToxicityA) * 100).toFixed(1)}% less
+                    toxic
+                  </span>{" "}
+                  than Text B
                 </p>
               ) : (
                 <p className="text-gray-700">
-                  Both texts have <span className="font-semibold">similar toxicity levels</span>
+                  Both texts have{" "}
+                  <span className="font-semibold">similar toxicity levels</span>
                 </p>
               )}
             </div>
@@ -306,53 +345,79 @@ function Compare() {
           <button
             onClick={() => {
               setTextA("You're such an idiot, can't you do anything right?");
-              setTextB("I think there might be some room for improvement here.");
+              setTextB(
+                "I think there might be some room for improvement here.",
+              );
               setResultsA(null);
               setResultsB(null);
             }}
             className="p-4 bg-white rounded-xl text-left hover:shadow-md transition-shadow border border-gray-200"
           >
-            <div className="text-sm font-medium text-gray-800 mb-2">Toxic vs Constructive</div>
-            <div className="text-xs text-gray-500">Compare aggressive feedback with constructive criticism</div>
+            <div className="text-sm font-medium text-gray-800 mb-2">
+              Toxic vs Constructive
+            </div>
+            <div className="text-xs text-gray-500">
+              Compare aggressive feedback with constructive criticism
+            </div>
           </button>
-          
+
           <button
             onClick={() => {
-              setTextA("This product is absolutely terrible, worst thing I've ever bought!");
-              setTextB("This product didn't meet my expectations. Here's why...");
+              setTextA(
+                "This product is absolutely terrible, worst thing I've ever bought!",
+              );
+              setTextB(
+                "This product didn't meet my expectations. Here's why...",
+              );
               setResultsA(null);
               setResultsB(null);
             }}
             className="p-4 bg-white rounded-xl text-left hover:shadow-md transition-shadow border border-gray-200"
           >
-            <div className="text-sm font-medium text-gray-800 mb-2">Negative Review Styles</div>
-            <div className="text-xs text-gray-500">Compare emotional vs factual negative feedback</div>
+            <div className="text-sm font-medium text-gray-800 mb-2">
+              Negative Review Styles
+            </div>
+            <div className="text-xs text-gray-500">
+              Compare emotional vs factual negative feedback
+            </div>
           </button>
-          
+
           <button
             onClick={() => {
               setTextA("I hate everything about this, it's disgusting!");
-              setTextB("I have several concerns about this that I'd like to discuss.");
+              setTextB(
+                "I have several concerns about this that I'd like to discuss.",
+              );
               setResultsA(null);
               setResultsB(null);
             }}
             className="p-4 bg-white rounded-xl text-left hover:shadow-md transition-shadow border border-gray-200"
           >
-            <div className="text-sm font-medium text-gray-800 mb-2">Emotional vs Professional</div>
-            <div className="text-xs text-gray-500">See how phrasing affects toxicity scores</div>
+            <div className="text-sm font-medium text-gray-800 mb-2">
+              Emotional vs Professional
+            </div>
+            <div className="text-xs text-gray-500">
+              See how phrasing affects toxicity scores
+            </div>
           </button>
-          
+
           <button
             onClick={() => {
-              setTextA("Your work is amazing! You're so talented and creative.");
+              setTextA(
+                "Your work is amazing! You're so talented and creative.",
+              );
               setTextB("Your work shows promise. Keep developing your skills.");
               setResultsA(null);
               setResultsB(null);
             }}
             className="p-4 bg-white rounded-xl text-left hover:shadow-md transition-shadow border border-gray-200"
           >
-            <div className="text-sm font-medium text-gray-800 mb-2">Positive Feedback Styles</div>
-            <div className="text-xs text-gray-500">Compare enthusiastic vs measured positive feedback</div>
+            <div className="text-sm font-medium text-gray-800 mb-2">
+              Positive Feedback Styles
+            </div>
+            <div className="text-xs text-gray-500">
+              Compare enthusiastic vs measured positive feedback
+            </div>
           </button>
         </div>
       </div>

@@ -3,7 +3,7 @@
  * Transform toxic text into constructive alternatives
  */
 
-import { TextRewriter } from '../components/TextRewriter';
+import { TextRewriter } from "../components/TextRewriter";
 
 function Rewriter() {
   return (

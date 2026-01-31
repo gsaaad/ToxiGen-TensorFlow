@@ -1,14 +1,21 @@
 /**
  * Statistics card component for dataset insights
  */
-export function StatCard({ title, value, subtitle, icon, color = 'blue', trend }) {
+export function StatCard({
+  title,
+  value,
+  subtitle,
+  icon,
+  color = "blue",
+  trend,
+}) {
   const colorClasses = {
-    blue: 'from-blue-500 to-blue-600',
-    green: 'from-green-500 to-green-600',
-    red: 'from-red-500 to-red-600',
-    purple: 'from-purple-500 to-purple-600',
-    orange: 'from-orange-500 to-orange-600',
-    indigo: 'from-indigo-500 to-indigo-600'
+    blue: "from-blue-500 to-blue-600",
+    green: "from-green-500 to-green-600",
+    red: "from-red-500 to-red-600",
+    purple: "from-purple-500 to-purple-600",
+    orange: "from-orange-500 to-orange-600",
+    indigo: "from-indigo-500 to-indigo-600",
   };
 
   return (
@@ -17,19 +24,21 @@ export function StatCard({ title, value, subtitle, icon, color = 'blue', trend }
         <div>
           <p className="text-sm font-medium text-gray-500">{title}</p>
           <p className="text-3xl font-bold text-gray-900 mt-1">{value}</p>
-          {subtitle && (
-            <p className="text-sm text-gray-400 mt-1">{subtitle}</p>
-          )}
+          {subtitle && <p className="text-sm text-gray-400 mt-1">{subtitle}</p>}
           {trend && (
-            <div className={`flex items-center gap-1 mt-2 text-sm ${
-              trend > 0 ? 'text-green-600' : 'text-red-600'
-            }`}>
-              <span>{trend > 0 ? '↑' : '↓'}</span>
+            <div
+              className={`flex items-center gap-1 mt-2 text-sm ${
+                trend > 0 ? "text-green-600" : "text-red-600"
+              }`}
+            >
+              <span>{trend > 0 ? "↑" : "↓"}</span>
               <span>{Math.abs(trend)}%</span>
             </div>
           )}
         </div>
-        <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${colorClasses[color]} flex items-center justify-center text-white text-xl shadow-lg`}>
+        <div
+          className={`w-12 h-12 rounded-xl bg-gradient-to-br ${colorClasses[color]} flex items-center justify-center text-white text-xl shadow-lg`}
+        >
           {icon}
         </div>
       </div>
@@ -46,7 +55,9 @@ export function CategoryBar({ name, count, percentage, color }) {
       <div className="flex items-center justify-between mb-1">
         <span className="text-sm font-medium text-gray-700">{name}</span>
         <div className="flex items-center gap-2">
-          <span className="text-xs text-gray-400">{count.toLocaleString()}</span>
+          <span className="text-xs text-gray-400">
+            {count.toLocaleString()}
+          </span>
           <span className="text-sm font-bold text-gray-900">{percentage}%</span>
         </div>
       </div>
@@ -65,7 +76,7 @@ export function CategoryBar({ name, count, percentage, color }) {
  */
 export function PieChart({ toxic, nonToxic }) {
   const toxicAngle = (toxic / 100) * 360;
-  
+
   return (
     <div className="relative w-48 h-48 mx-auto">
       <div
@@ -74,7 +85,7 @@ export function PieChart({ toxic, nonToxic }) {
           background: `conic-gradient(
             #ef4444 0deg ${toxicAngle}deg,
             #22c55e ${toxicAngle}deg 360deg
-          )`
+          )`,
         }}
       />
       <div className="absolute inset-4 bg-white rounded-full flex items-center justify-center shadow-inner">
@@ -91,8 +102,8 @@ export function PieChart({ toxic, nonToxic }) {
  * Mini bar chart for quick stats
  */
 export function MiniBarChart({ data }) {
-  const maxValue = Math.max(...data.map(d => d.value));
-  
+  const maxValue = Math.max(...data.map((d) => d.value));
+
   return (
     <div className="flex items-end gap-1 h-16">
       {data.map((item, idx) => (

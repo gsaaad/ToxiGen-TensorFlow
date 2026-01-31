@@ -1,4 +1,4 @@
-import { getImportanceColor, getTopWords } from '../utils/toxicity';
+import { getImportanceColor, getTopWords } from "../utils/toxicity";
 
 /**
  * SHAP-style word importance visualization
@@ -17,7 +17,9 @@ export function WordImportance({ importance, analyzing }) {
               <div className="absolute inset-0 border-4 border-blue-200 rounded-full"></div>
               <div className="absolute inset-0 border-4 border-blue-600 rounded-full border-t-transparent animate-spin"></div>
             </div>
-            <p className="text-gray-500 text-sm">Calculating word contributions...</p>
+            <p className="text-gray-500 text-sm">
+              Calculating word contributions...
+            </p>
           </div>
         </div>
       </div>
@@ -29,7 +31,7 @@ export function WordImportance({ importance, analyzing }) {
   }
 
   const topWords = getTopWords(importance, 5);
-  const hasSignificantWords = topWords.some(w => w.score > 0.05);
+  const hasSignificantWords = topWords.some((w) => w.score > 0.05);
 
   return (
     <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
@@ -73,33 +75,41 @@ export function WordImportance({ importance, analyzing }) {
               Top Contributing Words
             </label>
             <div className="space-y-2">
-              {topWords.filter(w => w.score > 0).map((item, idx) => (
-                <div key={idx} className="flex items-center gap-3">
-                  <span className="w-6 h-6 flex items-center justify-center bg-gray-100 rounded-full text-xs font-bold text-gray-600">
-                    {idx + 1}
-                  </span>
-                  <span className="font-medium text-gray-800 w-24 truncate">
-                    "{item.word}"
-                  </span>
-                  <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
-                    <div
-                      className={`h-full rounded-full transition-all duration-500 ${
-                        item.score > 0.3 ? 'bg-red-500' :
-                        item.score > 0.15 ? 'bg-orange-500' :
-                        'bg-yellow-500'
+              {topWords
+                .filter((w) => w.score > 0)
+                .map((item, idx) => (
+                  <div key={idx} className="flex items-center gap-3">
+                    <span className="w-6 h-6 flex items-center justify-center bg-gray-100 rounded-full text-xs font-bold text-gray-600">
+                      {idx + 1}
+                    </span>
+                    <span className="font-medium text-gray-800 w-24 truncate">
+                      "{item.word}"
+                    </span>
+                    <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                      <div
+                        className={`h-full rounded-full transition-all duration-500 ${
+                          item.score > 0.3
+                            ? "bg-red-500"
+                            : item.score > 0.15
+                              ? "bg-orange-500"
+                              : "bg-yellow-500"
+                        }`}
+                        style={{ width: `${Math.min(item.score * 100, 100)}%` }}
+                      />
+                    </div>
+                    <span
+                      className={`text-sm font-bold w-16 text-right ${
+                        item.score > 0.3
+                          ? "text-red-600"
+                          : item.score > 0.15
+                            ? "text-orange-600"
+                            : "text-yellow-600"
                       }`}
-                      style={{ width: `${Math.min(item.score * 100, 100)}%` }}
-                    />
+                    >
+                      +{(item.score * 100).toFixed(1)}%
+                    </span>
                   </div>
-                  <span className={`text-sm font-bold w-16 text-right ${
-                    item.score > 0.3 ? 'text-red-600' :
-                    item.score > 0.15 ? 'text-orange-600' :
-                    'text-yellow-600'
-                  }`}>
-                    +{(item.score * 100).toFixed(1)}%
-                  </span>
-                </div>
-              ))}
+                ))}
             </div>
           </div>
         )}

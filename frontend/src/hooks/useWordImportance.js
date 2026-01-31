@@ -1,5 +1,5 @@
-import { useState, useCallback } from 'react';
-import { calculateWordImportance } from '../utils/toxicity';
+import { useCallback, useState } from "react";
+import { calculateWordImportance } from "../utils/toxicity";
 
 /**
  * Custom hook for SHAP-style word importance analysis
@@ -18,12 +18,12 @@ export function useWordImportance() {
     try {
       setAnalyzing(true);
       setError(null);
-      
+
       const results = await calculateWordImportance(model, text);
       setImportance(results);
       return results;
     } catch (err) {
-      console.error('Error calculating word importance:', err);
+      console.error("Error calculating word importance:", err);
       setError(err.message);
       return [];
     } finally {
@@ -41,7 +41,7 @@ export function useWordImportance() {
     analyzing,
     error,
     analyze,
-    clear
+    clear,
   };
 }
 

@@ -1,14 +1,14 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from "react";
 
 const THRESHOLD = 0.5;
 const LABELS = [
-  'toxicity',
-  'severe_toxicity', 
-  'identity_attack',
-  'insult',
-  'threat',
-  'obscene',
-  'sexual_explicit'
+  "toxicity",
+  "severe_toxicity",
+  "identity_attack",
+  "insult",
+  "threat",
+  "obscene",
+  "sexual_explicit",
 ];
 
 /**
@@ -30,15 +30,15 @@ export function useToxicity() {
       setError(null);
 
       // Check if toxicity model is available globally
-      if (typeof window.toxicity !== 'undefined') {
+      if (typeof window.toxicity !== "undefined") {
         modelRef.current = await window.toxicity.load(THRESHOLD, LABELS);
         setReady(true);
-        console.log('✅ Toxicity model loaded successfully');
+        console.log("✅ Toxicity model loaded successfully");
       } else {
-        throw new Error('TensorFlow.js toxicity model not found');
+        throw new Error("TensorFlow.js toxicity model not found");
       }
     } catch (err) {
-      console.error('❌ Error loading toxicity model:', err);
+      console.error("❌ Error loading toxicity model:", err);
       setError(err.message);
       setReady(false);
     } finally {
@@ -53,13 +53,13 @@ export function useToxicity() {
 
     try {
       const predictions = await modelRef.current.classify([text]);
-      return predictions.map(pred => ({
+      return predictions.map((pred) => ({
         label: pred.label,
         match: pred.results[0]?.match || false,
-        probabilities: pred.results[0]?.probabilities || [0, 0]
+        probabilities: pred.results[0]?.probabilities || [0, 0],
       }));
     } catch (err) {
-      console.error('Error analyzing text:', err);
+      console.error("Error analyzing text:", err);
       throw err;
     }
   }, []);
@@ -72,7 +72,7 @@ export function useToxicity() {
     loading,
     error,
     ready,
-    reload: loadModel
+    reload: loadModel,
   };
 }
 

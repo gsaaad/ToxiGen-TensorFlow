@@ -63,6 +63,15 @@ Uses the pre-trained TensorFlow.js toxicity model (no training required).
 | Obscene | Vulgar/profane content |
 | Sexual Explicit | Sexual content |
 
+**Safety Labels:**
+| Score Range | Label | Indicator |
+|-------------|-------|----------|
+| 0-10% | Safe | 🟢 |
+| 10-30% | Low Risk | 🔵 |
+| 30-50% | Moderate | 🟡 |
+| 50-70% | High Risk | 🟠 |
+| 70%+ | Toxic | 🔴 |
+
 **Implementation:**
 
 ```javascript
@@ -126,6 +135,58 @@ Interactive exploration of the ToxiGen dataset with statistics and visualization
 
 ---
 
+### 4. Comprehensive NLP Analysis Suite
+
+A tabbed interface providing 10 different NLP analysis tools:
+
+| Tab            | Feature                                            | Library             |
+| -------------- | -------------------------------------------------- | ------------------- |
+| 📊 Statistics  | Word count, sentences, paragraphs, avg word length | Built-in            |
+| 💭 Sentiment   | Positive/negative/neutral scoring                  | `sentiment`         |
+| 📖 Readability | Flesch-Kincaid, grade level, reading time          | Built-in            |
+| 🔑 Keywords    | Top keywords with frequency counts                 | `keyword-extractor` |
+| 🌍 Language    | Auto-detect language from text                     | `franc-min`         |
+| 🏷️ POS Tags    | Parts of speech tagging (nouns, verbs, etc.)       | `compromise`        |
+| 👤 Entities    | Named entity recognition (people, places, orgs)    | `compromise`        |
+| 😊 Emotions    | Joy, sadness, anger, fear, surprise detection      | Pattern matching    |
+| ✍️ Style       | Formality, vocabulary diversity, sentence variety  | Built-in            |
+| ☁️ Word Cloud  | Visual word frequency display                      | Built-in            |
+
+---
+
+### 5. Toxic Text Rewriter
+
+Transform toxic content into constructive alternatives:
+
+**Features:**
+
+- Convert toxic text to neutral/professional language
+- Generate "safe insults" (humorous, non-offensive alternatives)
+- Severity indicator for input text
+- Writing tips cheatsheet
+- Multiple rewrite suggestions
+
+**Example Transformations:**
+
+```
+"You're an idiot" → "I respectfully disagree with your perspective"
+"This is stupid"  → "I have concerns about this approach"
+"Shut up"         → "I'd appreciate a moment to share my thoughts"
+```
+
+---
+
+### 6. Text Comparison Tool
+
+Compare two texts for similarity analysis:
+
+- **Similarity Score**: Percentage match using string-similarity
+- **Side-by-side Analysis**: View both texts with individual stats
+- **Detailed Metrics**: Word count, character count, unique words
+- **Use Cases**: Plagiarism detection, version comparison, A/B testing
+
+---
+
 ## 📁 Project Structure
 
 ```
@@ -134,20 +195,27 @@ text-toxicity-analyzer/
 ├── frontend/                    # React 19 + Vite
 │   ├── src/
 │   │   ├── components/
-│   │   │   ├── Navbar.jsx
-│   │   │   ├── ToxicityMeter.jsx
+│   │   │   ├── Navbar.jsx              # Navigation with all routes
+│   │   │   ├── ToxicityMeter.jsx       # Visual meter + safety labels
 │   │   │   ├── WordImportance.jsx      # SHAP visualization
-│   │   │   └── DatasetStats.jsx        # Charts & stats
+│   │   │   ├── DatasetStats.jsx        # Charts & stats
+│   │   │   ├── NLPAnalysis.jsx         # Tabbed NLP analysis UI
+│   │   │   ├── TextRewriter.jsx        # Toxic text rewriter UI
+│   │   │   └── UI.jsx                  # Reusable UI components
 │   │   ├── pages/
 │   │   │   ├── Home.jsx
-│   │   │   ├── Analyzer.jsx            # Main analysis tool
+│   │   │   ├── Analyzer.jsx            # Main analysis + NLP tools
 │   │   │   ├── Dataset.jsx             # Data explorer
-│   │   │   └── Insights.jsx            # Data analysis page
+│   │   │   ├── Insights.jsx            # Data analysis page
+│   │   │   ├── Compare.jsx             # Text comparison tool
+│   │   │   └── Rewriter.jsx            # Toxic text rewriter page
 │   │   ├── hooks/
 │   │   │   ├── useToxicity.js          # TF.js model hook
 │   │   │   └── useWordImportance.js    # Importance scoring
 │   │   └── utils/
-│   │       └── importance.js           # Word importance calc
+│   │       ├── nlp.js                  # NLP utilities (sentiment, POS, NER, etc.)
+│   │       ├── rewriter.js             # Toxic text transformation logic
+│   │       └── toxicity.js             # Toxicity scoring & labels
 │   ├── package.json
 │   └── vite.config.js
 │
@@ -306,15 +374,18 @@ Navigate to **http://localhost:3000**
 
 ## 🎓 Skills Demonstrated
 
-| Skill Area             | Implementation                                       |
-| ---------------------- | ---------------------------------------------------- |
-| **NLP/ML Integration** | TensorFlow.js toxicity model, client-side inference  |
-| **Explainable AI**     | SHAP-style word importance via perturbation analysis |
-| **Data Analysis**      | Dataset statistics, visualizations, filtering        |
-| **React 19**           | Hooks, functional components, state management       |
-| **PHP Backend**        | RESTful API, DynamoDB integration                    |
-| **NoSQL Database**     | AWS DynamoDB data modeling                           |
-| **Clean Architecture** | Separation of concerns, reusable components          |
+| Skill Area              | Implementation                                           |
+| ----------------------- | -------------------------------------------------------- |
+| **NLP/ML Integration**  | TensorFlow.js toxicity model, client-side inference      |
+| **Explainable AI**      | SHAP-style word importance via perturbation analysis     |
+| **Text Processing**     | Sentiment analysis, POS tagging, NER, keyword extraction |
+| **Language Detection**  | Multi-language support with franc-min                    |
+| **Text Transformation** | Toxic-to-constructive text rewriting                     |
+| **Data Analysis**       | Dataset statistics, visualizations, filtering            |
+| **React 19**            | Hooks, functional components, state management           |
+| **PHP Backend**         | RESTful API, DynamoDB integration                        |
+| **NoSQL Database**      | AWS DynamoDB data modeling                               |
+| **Clean Architecture**  | Separation of concerns, reusable components              |
 
 ---
 
@@ -340,6 +411,48 @@ Navigate to **http://localhost:3000**
 2. Clicks "Explain" to see word importance
 3. Visualizes which words contributed most
 4. Understands model reasoning (not a black box)
+
+### Scenario 4: Deep NLP Analysis
+
+1. User enters text in the Analyzer page
+2. Scrolls to NLP Analysis section with 10 tabs
+3. Views sentiment (positive/negative), readability grade level
+4. Explores POS tags, named entities, and emotions
+5. Generates word cloud for visual frequency analysis
+
+### Scenario 5: Rewrite Toxic Content
+
+1. User navigates to the Rewriter page
+2. Enters toxic or aggressive text
+3. Clicks "Rewrite" to transform to constructive language
+4. Views alternative phrasings and "safe insults"
+5. Copies rewritten text for use in communications
+
+### Scenario 6: Compare Two Texts
+
+1. User navigates to the Compare page
+2. Enters original text and revised version
+3. Views similarity percentage score
+4. Compares detailed statistics side-by-side
+5. Identifies differences in word usage and style
+
+---
+
+## 📦 Dependencies
+
+### Frontend
+
+```json
+{
+  "@tensorflow/tfjs": "TensorFlow.js core",
+  "@tensorflow-models/toxicity": "Pre-trained toxicity model",
+  "compromise": "NLP library for POS tagging & NER",
+  "sentiment": "Sentiment analysis",
+  "franc-min": "Language detection",
+  "keyword-extractor": "Keyword extraction",
+  "string-similarity": "Text comparison"
+}
+```
 
 ---
 
