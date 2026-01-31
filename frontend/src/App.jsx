@@ -40,7 +40,11 @@ function App() {
             Skip to main content
           </a>
           <Navbar />
-          <main id="main-content" className="container mx-auto px-4 py-8" role="main">
+          <main
+            id="main-content"
+            className="container mx-auto px-4 py-8"
+            role="main"
+          >
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/analyzer" element={<Analyzer />} />

@@ -26,19 +26,21 @@ function Navbar() {
 
   return (
     <header>
-      <nav 
+      <nav
         className="bg-white shadow-lg border-b border-gray-200"
         role="navigation"
         aria-label="Main navigation"
       >
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center h-16">
-            <Link 
-              to="/" 
+            <Link
+              to="/"
               className="flex items-center space-x-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-lg px-2 py-1"
               aria-label="Text Toxicity Analyzer - Home"
             >
-              <span className="text-2xl" aria-hidden="true">🛡️</span>
+              <span className="text-2xl" aria-hidden="true">
+                🛡️
+              </span>
               <span className="font-bold text-xl text-gray-800">
                 Text Toxicity Analyzer
               </span>

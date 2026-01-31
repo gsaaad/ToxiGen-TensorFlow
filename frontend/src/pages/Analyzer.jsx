@@ -14,10 +14,10 @@ function Analyzer() {
   const [results, setResults] = useState(null);
   const [analyzing, setAnalyzing] = useState(false);
   const [showExplain, setShowExplain] = useState(false);
-  
+
   // Debounce text for NLP analysis (500ms delay)
   const debouncedText = useDebounce(text, 500);
-  
+
   // Toast notifications
   const toast = useToast();
 
@@ -48,23 +48,26 @@ function Analyzer() {
       if (predictions) {
         const formatted = formatPredictions(predictions);
         setResults(formatted);
-        
+
         // Show toast notification based on results
-        const hasToxic = formatted.some(r => r.match);
-        const toxicCount = formatted.filter(r => r.match).length;
-        
+        const hasToxic = formatted.some((r) => r.match);
+        const toxicCount = formatted.filter((r) => r.match).length;
+
         if (hasToxic) {
           toast.warning(
-            `${toxicCount} toxicity categor${toxicCount > 1 ? 'ies' : 'y'} detected`,
-            'Analysis Complete'
+            `${toxicCount} toxicity categor${toxicCount > 1 ? "ies" : "y"} detected`,
+            "Analysis Complete",
           );
         } else {
-          toast.success('No toxicity detected in the text', 'Analysis Complete');
+          toast.success(
+            "No toxicity detected in the text",
+            "Analysis Complete",
+          );
         }
       }
     } catch (err) {
       console.error("Analysis error:", err);
-      toast.error(err.message || 'Failed to analyze text', 'Analysis Error');
+      toast.error(err.message || "Failed to analyze text", "Analysis Error");
     } finally {
       setAnalyzing(false);
     }
@@ -77,9 +80,9 @@ function Analyzer() {
     setShowExplain(true);
     try {
       await analyzeImportance(model, text);
-      toast.info('Word importance analysis complete', 'Explanation Ready');
+      toast.info("Word importance analysis complete", "Explanation Ready");
     } catch (err) {
-      toast.error('Failed to generate explanation', 'Error');
+      toast.error("Failed to generate explanation", "Error");
     }
   }, [getModel, text, analyzeImportance, toast]);
 
@@ -95,7 +98,7 @@ function Analyzer() {
     setResults(null);
     setShowExplain(false);
     clearImportance();
-    toast.info('Analysis cleared', 'Reset');
+    toast.info("Analysis cleared", "Reset");
   };
 
   // Check if any category is flagged as toxic
@@ -167,7 +170,10 @@ function Analyzer() {
       <Card hover>
         <CardBody className="space-y-4">
           <div className="flex items-center justify-between">
-            <label htmlFor="text-input" className="text-sm font-semibold text-gray-700">
+            <label
+              htmlFor="text-input"
+              className="text-sm font-semibold text-gray-700"
+            >
               Enter Text to Analyze
             </label>
             <span className="text-xs text-gray-400" aria-live="polite">
@@ -188,10 +194,15 @@ function Analyzer() {
             className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 resize-none transition-all disabled:bg-gray-50 disabled:cursor-not-allowed text-gray-800 placeholder-gray-400"
           />
           <p id="text-input-hint" className="sr-only">
-            Enter text and click Analyze to check for toxicity across 7 categories
+            Enter text and click Analyze to check for toxicity across 7
+            categories
           </p>
 
-          <div className="flex flex-wrap items-center gap-3" role="group" aria-label="Analysis actions">
+          <div
+            className="flex flex-wrap items-center gap-3"
+            role="group"
+            aria-label="Analysis actions"
+          >
             <button
               onClick={analyzeText}
               disabled={!text.trim() || analyzing || !ready}
@@ -200,7 +211,10 @@ function Analyzer() {
             >
               {analyzing ? (
                 <>
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" aria-hidden="true" />
+                  <div
+                    className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"
+                    aria-hidden="true"
+                  />
                   <span>Analyzing...</span>
                   <span className="sr-only">Analysis in progress</span>
                 </>
@@ -345,7 +359,10 @@ function Analyzer() {
       <Card className="bg-gradient-to-br from-slate-50 to-slate-100 border-slate-200">
         <CardBody>
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-xl bg-slate-200 flex items-center justify-center text-2xl flex-shrink-0" aria-hidden="true">
+            <div
+              className="w-12 h-12 rounded-xl bg-slate-200 flex items-center justify-center text-2xl flex-shrink-0"
+              aria-hidden="true"
+            >
               ℹ️
             </div>
             <div>

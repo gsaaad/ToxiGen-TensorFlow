@@ -3,7 +3,7 @@
  * Comprehensive text analysis with multiple NLP features
  */
 
-import { useEffect, useMemo, useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import {
   analyzeEmotions,
   analyzeSentiment,
@@ -23,7 +23,10 @@ import {
 
 function LoadingSkeleton({ className = "" }) {
   return (
-    <div className={`animate-pulse bg-gray-200 rounded ${className}`} aria-hidden="true" />
+    <div
+      className={`animate-pulse bg-gray-200 rounded ${className}`}
+      aria-hidden="true"
+    />
   );
 }
 
@@ -36,7 +39,10 @@ function AnalysisLoadingState() {
       </div>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
         {[...Array(6)].map((_, i) => (
-          <div key={i} className="bg-white rounded-xl p-4 border border-gray-100">
+          <div
+            key={i}
+            className="bg-white rounded-xl p-4 border border-gray-100"
+          >
             <div className="flex items-center gap-3">
               <LoadingSkeleton className="w-10 h-10 rounded-lg" />
               <div className="space-y-2">
@@ -724,7 +730,7 @@ export function NLPAnalysis({ text }) {
     }
 
     setIsAnalyzing(true);
-    
+
     // Use startTransition for non-urgent updates
     startTransition(() => {
       const result = {
@@ -746,8 +752,14 @@ export function NLPAnalysis({ text }) {
 
   if (!text || !text.trim()) {
     return (
-      <div className="text-center py-12 text-gray-500" role="status" aria-live="polite">
-        <span className="text-6xl" aria-hidden="true">📝</span>
+      <div
+        className="text-center py-12 text-gray-500"
+        role="status"
+        aria-live="polite"
+      >
+        <span className="text-6xl" aria-hidden="true">
+          📝
+        </span>
         <p className="mt-4 text-lg">Enter text to see NLP analysis</p>
       </div>
     );
@@ -773,7 +785,7 @@ export function NLPAnalysis({ text }) {
   return (
     <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
       {/* Tab Navigation */}
-      <nav 
+      <nav
         className="flex overflow-x-auto border-b border-gray-200 bg-gray-50"
         role="tablist"
         aria-label="NLP Analysis tabs"
@@ -788,12 +800,13 @@ export function NLPAnalysis({ text }) {
             tabIndex={activeTab === tab.id ? 0 : -1}
             onClick={() => setActiveTab(tab.id)}
             onKeyDown={(e) => {
-              const currentIndex = tabs.findIndex(t => t.id === activeTab);
-              if (e.key === 'ArrowRight') {
+              const currentIndex = tabs.findIndex((t) => t.id === activeTab);
+              if (e.key === "ArrowRight") {
                 const nextIndex = (currentIndex + 1) % tabs.length;
                 setActiveTab(tabs[nextIndex].id);
-              } else if (e.key === 'ArrowLeft') {
-                const prevIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+              } else if (e.key === "ArrowLeft") {
+                const prevIndex =
+                  (currentIndex - 1 + tabs.length) % tabs.length;
                 setActiveTab(tabs[prevIndex].id);
               }
             }}
@@ -811,7 +824,7 @@ export function NLPAnalysis({ text }) {
       </nav>
 
       {/* Tab Content */}
-      <div 
+      <div
         className="p-6"
         role="tabpanel"
         id={`panel-${activeTab}`}

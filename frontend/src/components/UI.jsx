@@ -9,13 +9,17 @@ export function LoadingSpinner({ size = "md", text }) {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center gap-3" role="status" aria-live="polite">
+    <div
+      className="flex flex-col items-center justify-center gap-3"
+      role="status"
+      aria-live="polite"
+    >
       <div
         className={`${sizes[size]} border-blue-200 border-t-blue-600 rounded-full animate-spin`}
         aria-hidden="true"
       />
       {text && <p className="text-gray-500 text-sm">{text}</p>}
-      <span className="sr-only">{text || 'Loading...'}</span>
+      <span className="sr-only">{text || "Loading..."}</span>
     </div>
   );
 }
@@ -26,7 +30,9 @@ export function LoadingSpinner({ size = "md", text }) {
 export function EmptyState({ icon, title, description, action }) {
   return (
     <div className="text-center py-12" role="status">
-      <div className="text-5xl mb-4" aria-hidden="true">{icon}</div>
+      <div className="text-5xl mb-4" aria-hidden="true">
+        {icon}
+      </div>
       <h3 className="text-lg font-semibold text-gray-800 mb-2">{title}</h3>
       <p className="text-gray-500 mb-4">{description}</p>
       {action}
@@ -63,9 +69,13 @@ export function Alert({ type = "info", title, message, onClose }) {
     <div
       className={`${styles[type]} border rounded-xl p-4 flex items-start gap-3`}
       role={roleMap[type]}
-      aria-live={type === 'error' || type === 'warning' ? 'assertive' : 'polite'}
+      aria-live={
+        type === "error" || type === "warning" ? "assertive" : "polite"
+      }
     >
-      <span className="text-lg" aria-hidden="true">{icons[type]}</span>
+      <span className="text-lg" aria-hidden="true">
+        {icons[type]}
+      </span>
       <div className="flex-1">
         {title && <p className="font-semibold">{title}</p>}
         <p className="text-sm opacity-90">{message}</p>
